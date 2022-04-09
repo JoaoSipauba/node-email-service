@@ -1,0 +1,2 @@
+- should have tests (jest)
+- should be a microservice
