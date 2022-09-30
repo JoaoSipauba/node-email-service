@@ -9,7 +9,7 @@ interface ISendMail {
 export class SendMailUseCase {
     async execute({ destinatary, subject, text }: ISendMail){
         let transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
+            host: process.env.SMTP_HOST,
             secure: true,
             auth: {
                 user: process.env.SMTP_USER,
@@ -26,14 +26,18 @@ export class SendMailUseCase {
             throw new Error("Subject doesnt exists")
         }
 
-        let info = await transporter.sendMail({
-            from: '<joaosipauba@hotmail.com>',
-            to: destinatary,
-            subject: subject,
-            text: text,
-            html: "<b>Hello world?</b>",
-        });
-
-        return info;
+        try {
+            let info = await transporter.sendMail({
+                from: '<joaosipauba@hotmail.com>',
+                to: destinatary,
+                subject: subject,
+                text: text,
+                html: "<b>Hello world?</b>",
+            });
+    
+            return info;
+        } catch (error) {
+            return (error)
+        }
     }
 }
